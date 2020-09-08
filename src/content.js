@@ -1,9 +1,7 @@
 // content.js
+// var instructorStore = {
 
-
-instructorStore = {
-
-}
+// };
 
 // Ensure it's injected only once
 var injected;
@@ -14,16 +12,23 @@ if(!injected) {
 
 //logic here
 function scrapeProfessors() {
+  let uniqueInstructors = 0;
+  var instructorStore = {};
   $('.sectionDetail').each(function () {
     if($(this).find("td").length > 0) {
       let instructorName = $(this).find("td")[6].innerText.trim(); //grabbing professors name
+
       //adding the instructor to the dictionary if not currently in
-      if([instructorStore[instructorName] === undefined]) {
-        // instructorStore[instructorName] = getRateMyProfessorScore(instructorName);
-        instructorStore[instructorName] = 'N/A';
+      if(!(instructorName in instructorStore)) {
+        uniqueInstructors += 1;
+        instructorStore[instructorName] = 420;
       }
     }
   })
+
+  //store of names
+  console.log(instructorStore);
+  console.log(`Unique Instructors: ${uniqueInstructors}`);
 }
 
 
