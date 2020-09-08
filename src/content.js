@@ -1,7 +1,13 @@
 // content.js
-// var instructorStore = {
 
-// };
+
+
+// https://www.ratemyprofessors.com/filter/professor/?&page=1&queryoption=TEACHER&query=David+Juedes
+
+var rate_my_prof_url = 'https://www.ratemyprofessors.com/filter/professor/?&page=1&queryoption=TEACHER&query=';
+var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+
+
 
 // Ensure it's injected only once
 var injected;
@@ -9,6 +15,41 @@ if(!injected) {
   injected = true;
   chrome.runtime.onMessage.addListener(handleMessage);
 }
+
+
+
+
+function getInstrcutorScore(name) {
+  var score;
+  fetch(`${proxyUrl}${rate_my_prof_url}${name.split(' ').join('+')}&sid=727`) //727 is school id code for ohio university
+    .then(
+      function(response) {
+        if (response.status !== 200) {
+          console.log(`Error: ${response.status}`);
+          return;
+        }
+
+        //Examine response
+        response.json().then(function(data) {
+          console.log(data);
+
+          if(data.professors.length == 0) score = -1;
+          // if(data.professors.length > 1) score = -1
+          else {
+            return(data.professors[0]['overall_rating']);
+            // score = data.professors[0]['overall_rating'];
+          }
+        });
+      }
+    ).catch(function(err) {
+      console.log(`Error: ${err}`);
+      return -1;  
+    });
+
+    return score;
+}
+
+
 
 //logic here
 function scrapeProfessors() {
@@ -21,7 +62,10 @@ function scrapeProfessors() {
       //adding the instructor to the dictionary if not currently in
       if(!(instructorName in instructorStore)) {
         uniqueInstructors += 1;
-        instructorStore[instructorName] = 420;
+        let score = getInstrcutorScore(instructorName);
+        console.log(score);
+        console.log(`Score for ${instructorName}: ${score}`);
+        instructorStore[instructorName] = 0;
       }
     }
   })
@@ -32,14 +76,8 @@ function scrapeProfessors() {
 }
 
 
-// function getRateMyProfessorScore(name) {
 
-// }
 
-//First 3 listings selectors
-// #courseATHN1000 > tbody > tr:nth-child(2) > td.columnTitle
-// #courseATHN2000 > tbody > tr:nth-child(2) > td.columnTitle
-// #courseATHN3000 > tbody > tr:nth-child(2) > td.columnValue
 
 function handleMessage(message, sender, sendResponse) {
   console.log(`Recieved the message: ${message.action}`);
