@@ -1,7 +1,7 @@
 // content.js
 
 
-
+// https://www.ratemyprofessors.com/filter/professor/?&page=1&queryoption=TEACHER&query=Juanita+Hall&sid=727
 // https://www.ratemyprofessors.com/filter/professor/?&page=1&queryoption=TEACHER&query=David+Juedes
 
 var rate_my_prof_url = 'https://www.ratemyprofessors.com/filter/professor/?&page=1&queryoption=TEACHER&query=';
@@ -19,7 +19,7 @@ if(!injected) {
 
 
 
-function getInstrcutorScore(name) {
+function getInstrcutorScore(name, callback) {
   var score;
   fetch(`${proxyUrl}${rate_my_prof_url}${name.split(' ').join('+')}&sid=727`) //727 is school id code for ohio university
     .then(
@@ -28,25 +28,24 @@ function getInstrcutorScore(name) {
           console.log(`Error: ${response.status}`);
           return;
         }
-
         //Examine response
         response.json().then(function(data) {
-          console.log(data);
+          //data.professors returns an array with details on each prof. professor[1] is our desired prof
 
-          if(data.professors.length == 0) score = -1;
+          if(data.professors.length == 0) callback(-1); //clean up
           // if(data.professors.length > 1) score = -1
           else {
-            return(data.professors[0]['overall_rating']);
-            // score = data.professors[0]['overall_rating'];
+            console.log(data.professors[0]['overall_rating']);
+            callback(data.professors[0]['overall_rating']);
           }
         });
       }
     ).catch(function(err) {
       console.log(`Error: ${err}`);
-      return -1;  
+      callback(-1); //clean  
     });
 
-    return score;
+    callback(score);
 }
 
 
@@ -54,22 +53,20 @@ function getInstrcutorScore(name) {
 //logic here
 function scrapeProfessors() {
   let uniqueInstructors = 0;
-  var instructorStore = {};
+  let instructorStore = {};
   $('.sectionDetail').each(function () {
     if($(this).find("td").length > 0) {
-      let instructorName = $(this).find("td")[6].innerText.trim(); //grabbing professors name
-
+      let instructorName = $(this).find("td")[6].innerText.trim(); //grabbing professors name. weird formatting like:          prof  name         
+      
       //adding the instructor to the dictionary if not currently in
       if(!(instructorName in instructorStore)) {
-        uniqueInstructors += 1;
-        let score = getInstrcutorScore(instructorName);
-        console.log(score);
-        console.log(`Score for ${instructorName}: ${score}`);
-        instructorStore[instructorName] = 0;
+        let score = getInstrcutorScore(instructorName, (score) => {
+          instructorStore[instructorName] = score;
+        });
+        uniqueInstructors += 1; //iterating unique instructors 
       }
     }
-  })
-
+  });
   //store of names
   console.log(instructorStore);
   console.log(`Unique Instructors: ${uniqueInstructors}`);
