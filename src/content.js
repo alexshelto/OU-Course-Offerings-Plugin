@@ -14,7 +14,6 @@ const odd  = '.classSpecRowOdd';
 
 
 
-
 async function getInstrcutorScore(name) {
   let score = 'N/A'
   let initialResponse = await fetch(`${URL}api/${name}`);
@@ -34,10 +33,10 @@ const scrapeProfessors = () => {
   let odd = true;
   let rowOdd = true; //weird css that has even and odd rows
 
-  console.log($(this).find('sectionHeaderTitleRow').length);
+  console.log($('.sectionHeaderTitleRow').length);
   //adding rate my professor row
   $('.sectionHeaderTitleRow').append("<th>Score</th>");
-  $(odd).append('<td>420</td>');
+  // $(odd).append('<td>420</td>');
 
 
 
@@ -54,8 +53,8 @@ const scrapeProfessors = () => {
         store[instructorName] = score;
         console.log(score);
 
-        if(rowOdd){ $(odd).find('td')[13].innerText = score; }
-        else      { $(even).find('td')[13].innerText = score; }
+        // if(rowOdd){ $(odd).find('td')[13].innerText = score; }
+        // else      { $(even).find('td')[13].innerText = score; }
         
 
       }).catch(err => console.log(err));
