@@ -42,28 +42,23 @@ async function getInstrcutorScore(name) {
 //logic here
 function scrapeProfessors() {
   let store = {};
-  let n = 0;
 
-  let uniqueInstructors = 0;
   $('.sectionDetail').each(function () {
     if($(this).find("td").length > 0) {
       let instructorName = $(this).find("td")[6].innerText.trim(); //grabbing professors name. weird formatting like:          prof  name         
       instructorName  = instructorName.split(' ').join(''); // sting before: John Smith, after: JohnSmith
-      console.log(`Prof #${n}, name:${instructorName}`);
 
       getInstrcutorScore(instructorName).
       then((score) => {
         store[instructorName] = score;
-        console.log(score);
+        $(this).find('td')[6].append(score);
       }).catch(err => console.log(err));
-      n += 1;
+
 
     }//endif
 });
-  console.log(`Unique Instructors: ${uniqueInstructors}`);
   console.log(store);
 }
-
 
 
 
