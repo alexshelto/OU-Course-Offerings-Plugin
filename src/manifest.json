@@ -26,7 +26,8 @@
 
   "permissions": [
     "tabs",
-    "https://webapps.ohio.edu/classes/*"
+    "https://webapps.ohio.edu/classes/*",
+    "http://127.0.0.1:5000/*"  
   ],
   "manifest_version": 2
 }
