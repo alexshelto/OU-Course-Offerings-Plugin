@@ -40,7 +40,7 @@ async function getInstrcutorScore(name) {
 
 
 //logic here
-function scrapeProfessors() {
+const scrapeProfessors = () => {
   let store = {};
 
   $('.sectionDetail').each(function () {
