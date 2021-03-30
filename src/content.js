@@ -15,30 +15,40 @@ const odd  = '.classSpecRowOdd';
 //logic here
 const scrapeProfessors = () => {
 
-  
+  let isOdd = true;
 
-  let odd = true;
-  let rowOdd = true; //weird css that has even and odd rows
-  let n = 1;
-
+  $('.sectionsTable').append("<th class='score'>Score</th>");
   $('.sectionHeaderTitleRow').append("<th class='score'>Score</th>");
   //adding rate my professor row
 
   //looping over each section detail to get professor name
+  let iter = 3;
   $('.sectionDetail').each(function () {
 
     //if there is a row with data
     //NOTE: have to somehow handle multiple profs within 1 class
+    // Find the current professors name and get the score
     if($(this).find("td").length > 0) {
-      let instructorName = $(this).find("td")[6].innerText.trim().split(" ");
+      let instructorName = $(this).find("td")[6].innerText.trim().replace('\n', ' ').split(" ");
       //let instructorName = $(this).find("td")[6].innerText.trim(); //grabbing professors name. weird formatting like:          prof  name         
+      console.log(`this class has ${instructorName.length / 2} profs`);
       let name = instructorName[0]+instructorName[1];
-
       let score = store[name] == undefined? "N/A" : store[name];
-
       console.log(`name: ${name}, score:: ${score}`);
 
-      rowOdd = !rowOdd; //changing value
+
+      if(iter % 3 == 0 && isOdd) {
+        console.log("odd row: ", name);
+        // odd logic
+      } 
+      if(iter % 3 == 0 && !isOdd) {
+        console.log("even row: ", name);
+        //even logic
+      }
+
+      isOdd = !isOdd;
+
+
     }//endif
   });
 }
