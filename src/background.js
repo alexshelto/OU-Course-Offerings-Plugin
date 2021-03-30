@@ -1,3 +1,10 @@
+/*
+ *
+ *
+ *
+ */
+
+
 // Initialzing the application
 chrome.runtime.onInstalled.addListener(() => {
   console.log('on install triggered');
