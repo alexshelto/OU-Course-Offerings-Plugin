@@ -1,6 +1,3 @@
-const fs = require('fs');
-var obj = JSON.parse(fs.readFileSync('file', 'utf8'));
-
 
 
 // Ensure it's injected only once
@@ -15,25 +12,11 @@ const odd  = '.classSpecRowOdd';
 
 
 
-
-async function getInstrcutorScore(name) {
-  let score = 'N/A'
-
-  let initialResponse = await fetch(`${URL}api/${name}`);
-  let data = await initialResponse.json();
-  if(data.data.length > 0){
-    score = data.data[0]['score'];
-  }
-  console.log(`return score: ${score}`);
-  return score;
-}
-
-
-
 //logic here
 const scrapeProfessors = () => {
-  let store = JSON.parse(fs.readFileSync('scores.json', 'utf8'));
+  console.log("scraping");
 
+  /*
   let odd = true;
   let rowOdd = true; //weird css that has even and odd rows
   let n = 1;
@@ -50,7 +33,8 @@ const scrapeProfessors = () => {
       let instructorName = $(this).find("td")[6].innerText.trim(); //grabbing professors name. weird formatting like:          prof  name         
       instructorName  = instructorName.split(' ').join(''); // sting before: John Smith, after: JohnSmith
 
-      let score = store[instructorName] == undefined? "N/A" : store[instructorName];
+     // let score = store[instructorName] == undefined? "N/A" : store[instructorName];
+      let score = "N/A";
 
       console.log(`name: ${instructorName}, score: ${score}`);
 
@@ -58,6 +42,7 @@ const scrapeProfessors = () => {
     }//endif
   });
   //console.log(`${instructorName}: ${score}`);
+  */
 }
 
 

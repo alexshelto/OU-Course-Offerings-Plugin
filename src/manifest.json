@@ -1,34 +1,32 @@
+
 {
-  "name": "OU Courses Plugin",
+  "name": "OU Course Offerings Rate My Professor",
+  "description": "shows all professors rate my professor score next to their name in course offerings",
   "version": "1.0",
-  "description": "Lists instuctor's rate my professor score next to the course",
-
-  "browser_action": {
-	},
-
-  "content_scripts": [
-    {
-        "matches": [
-            "*://*/*"
-        ],
-        "js": [ 
-            "jquery.js",
-            "content.js"
-        ],
-        "run_at": "document_end"
-    }
-],
+  "manifest_version": 2,
 
   "background": {
     "scripts": ["background.js"],
     "persistent": false
   },
 
-  "permissions": [
-    "tabs",
-    "https://webapps.ohio.edu/classes/*",
-    
-    "storage"
-  ],
-  "manifest_version": 2
+  "browser_action": {},
+   "content_scripts": [
+    {
+        "matches": [
+            "https://webapps.ohio.edu/classes/*"
+        ],
+        "js": [
+            "jquery.js",
+            "content.js"
+        ],
+        "run_at": "document_end"
+    }],
+
+    "permissions": [
+      "tabs",
+      "storage",
+      "https://webapps.ohio.edu/classes/*"
+    ]
+
 }
