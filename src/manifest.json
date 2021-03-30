@@ -25,7 +25,6 @@
 
     "permissions": [
       "tabs",
-      "storage",
       "https://webapps.ohio.edu/classes/*"
     ]
 
