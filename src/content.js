@@ -32,25 +32,8 @@ const scrapeProfessors = () => {
       //console.log(`this class has ${instructorName.length / 2} profs`);
       let name = instructorName[0]+instructorName[1];
       let score = store[name] == undefined? "N/A" : store[name];
-
-
-      console.log("iter: " , iter);
-      // Injection into table
-      if(isOdd) {
-        //$(odd).find('td:eq(0)')[14].innerText = score; 
-        $(`.classSpecRowOdd:eq(${iter-3})`).append(`<td>${score}</td>`);
-        console.log(`ODD : name: ${name}, score:: ${score}`);
-
-        // odd logic
-      } 
-      if(!isOdd) {
-        //even logic
-        //$(even).find('td:eq(0)')[14].innerText = score; 
-        $(`.classSpecRowEven:eq(${iter-3})`).append(`<td>${score}</td>`);
-
-        console.log(`EVEN : name: ${name}, score:: ${score}`);
-      }
       
+      $(`#courseListATHN > tbody > tr > td > table > tbody > tr:nth-child(${iter -1})`).append(`<td>${score}</td>`);
 
       iter = iter + 3;
       isOdd = !isOdd;
