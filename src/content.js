@@ -1,12 +1,20 @@
 
 
 // Ensure it's injected only once
-var injected;
-if(!injected) {
-  injected = true;
-  chrome.runtime.onMessage.addListener(handleMessage);
-}
+var injected = false;
+chrome.runtime.onMessage.addListener(handleMessage);
 
+
+
+function cleanString(input) {
+    var output = "";
+    for (var i=0; i<input.length; i++) {
+        if (input.charCodeAt(i) <= 127) {
+            output += input.charAt(i);
+        }
+    }
+    return output;
+}
 
 
 
@@ -23,37 +31,65 @@ const scrapeProfessors = () => {
   //looping over each section detail to get professor name
   $('.sectionDetail').each(function () {
 
+    
+
+    //#courseATHN10000 > tbody > tr:nth-child(2) > td.columnTitle
+
+    //#courseATHN9000 > tbody > tr:nth-child(2) > td.columnTitle
+
     //if there is a row with data
     //NOTE: have to somehow handle multiple profs within 1 class
     // Find the current professors name and get the score
     if($(this).find("td").length > 0) {
+
+      let profs = $(this).find('#courseATHN9000 > tbody > tr:nth-child(2) > td.columnTitle');
+
       let instructorName = $(this).find("td")[6].innerText.trim().replace('\n', ' ').split(" ");
+
+      let instructorString = cleanString($(this).find("td")[6].innerText);
+
+      intructorString = instructorString.replace(/ +(?= )/g,'').split(' ');
+      let s = instructorString.split(' ');
+      console.log(`obj: ${s}`);
+      //console.log(`index: ${s[0]} ${s[1]}`);
+
+      //console.log(instructorName);
       //let instructorName = $(this).find("td")[6].innerText.trim(); //grabbing professors name. weird formatting like:          prof  name         
       //console.log(`this class has ${instructorName.length / 2} profs`);
       let name = instructorName[0]+instructorName[1];
       let score = store[name] == undefined? "N/A" : store[name];
-      
-      $(`#courseListATHN > tbody > tr > td > table > tbody > tr:nth-child(${iter -1})`).append(`<td>${score}</td>`);
 
+
+      if (instructorName.length / 2 > 1) {
+        // Looping all instructors to get their scores
+        let compareStr = "testing";
+        /*
+        let compareStr = "";
+        for(let i = 1; i < instructorName.length; i++) {
+          let name = `${instructorName[i-1]} ${instructorName[i]}`;
+          let score = store[name.replace(' ', '')];
+          compareStr += `${name}: ${score}\n`;
+        }
+        */
+        //console.log(profs);
+        
+      $(`#courseListATHN > tbody > tr > td > table > tbody > tr:nth-child(${iter -1})`).append(`<td><button onclick="alert('${compareStr}')">compare profs</button></td>`);
+      }
+      else {
+        $(`#courseListATHN > tbody > tr > td > table > tbody > tr:nth-child(${iter -1})`).append(`<td><b>${score}</b></td>`);
+      }
+        
       iter = iter + 3;
       isOdd = !isOdd;
-
-
     }//endif
   });
 }
-
-//First odd entry
-//document.querySelector("#courseListATHN > tbody > tr > td > table > tbody > tr:nth-child(2)")
-
-//First even entry
-//#courseListATHN > tbody > tr > td > table > tbody > tr:nth-child(5)
 
 
 function handleMessage(message, sender, sendResponse){
   console.log(`Recieved the message: ${message.action}`);
 
-  if(message.action == "inject-professors"){
+  if(message.action == "inject-professors") { 
     scrapeProfessors();
     sendResponse($(document).find("td:contains('Instructors:)").length);
   }
